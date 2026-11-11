@@ -1,16 +1,52 @@
-# UAV Crack Segmentation
+<div align="center">
 
-**Pixel-level pavement crack segmentation from UAV imagery.** This project turns aerial road images into binary crack maps, with an emphasis on thin structures, connectivity and reliable native-resolution prediction. The full submission achieved **82.83% mIoU** on the [UAV-CrackX benchmark leaderboard](http://vlp.chd.edu.cn/tasks/4), #1 seed at the time of submission.
+# 🛰️ UAV Crack Segmentation
+
+### Pixel-Level Road & Pavement Crack Segmentation from UAV Imagery
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Task](https://img.shields.io/badge/Task-Binary%20Segmentation-0A7E8C)](#-project-overview)
+[![Code License](https://img.shields.io/badge/Code%20License-MIT-2D7D46)](LICENSE)
+[![Benchmark](https://img.shields.io/badge/Benchmark-UAV--CrackX-6655B8)](http://vlp.chd.edu.cn/tasks/4)
+
+**Thin-crack detection · Native-resolution inference · Topology-aware learning**
+
+</div>
+
+
+## 🌍 Project Overview
+
+This project turns aerial road images into **pixel-level binary crack maps**, with an emphasis on thin structures, connectivity, and reliable native-resolution prediction. The full submission achieved **82.83% mIoU** on the [UAV-CrackX benchmark leaderboard](http://vlp.chd.edu.cn/tasks/4), ranked #1 seed at the time of submission.
+
+| 🏆 Full seven-model submission | 🎯 Released single-model submission | 🧪 Labeled dataset | 📐 Native resolution |
+|:---:|:---:|:---:|:---:|
+| **82.83% mIoU** | **81.73% mIoU** | **1,200 pairs** | **672 × 378 px** |
+
+> **Evaluation note:** 82.83% is the official **seven-model ensemble** score, not the score of either individual released checkpoint. The released single-model result is 81.73% mIoU. See [Results and Release Scope](#-results-and-release-scope) and [Model Card](MODEL_CARD.md).
 
 <p align="center">
   <img src="assets/road_crack.png" alt="Conceptual UAV pavement inspection and road crack segmentation workflow" width="900">
 </p>
 
-*Conceptual UAV pavement inspection illustration.*
+<p align="center"><sub><i>Conceptual UAV pavement inspection illustration (not an experimental prediction).</i></sub></p>
 
 This compact release provides **MiT-B0 + UPer**, an optional native-resolution RGB/logit refinement head, two trained checkpoints, and complete loading, loss, training, evaluation and flip-TTA code. Replace the example dataset paths to run your own experiments.
 
-## Dataset: UAV-CrackX
+### ✨ Highlights
+
+- **🧠 Compact architecture:** MiT-B0 encoder with UPer decoder and optional native-resolution RGB/logit refinement.
+- **🕸️ Thin-crack learning:** BCE, soft Dice, and topology-oriented soft clDice supervision.
+- **🔎 Reproducible inference:** Two released checkpoints with documented threshold, flip-TTA, and geometry settings.
+- **🧪 Practical research baseline:** Dataset manifests, training configurations, tests, and evaluation utilities.
+- **📋 Transparent scope:** Distinguishes released components from the full historical ensemble pipeline.
+
+### 🧭 Navigate
+
+[📂 Dataset](#-dataset-uav-crackx) · [🖼️ Predictions](#-prediction-examples) · [📊 Results](#-results-and-release-scope) · [⚙️ Install](#-install) · [🚀 Inference](#-reproduce-a-released-model) · [🗂️ Data](#-data-paths-the-only-required-placeholders) · [🧠 Training](#-train) · [📜 Attribution](#-files-and-attribution)
+
+
+## 📂 Dataset: UAV-CrackX
 
 [UAV-CrackX](https://github.com/SHAN-JH/UAV-CrackX-Datasets) contains UAV pavement imagery acquired at a 50 m flying altitude with **4x, 8x and 16x magnification**. Thin cracks, textured pavement, shadows and changes in apparent crack width make it a useful benchmark for aerial infrastructure inspection.
 
@@ -25,13 +61,15 @@ This compact release provides **MiT-B0 + UPer**, an optional native-resolution R
 
 The source dataset and its acquisition procedure are described in [Automation in Construction (2025)](https://doi.org/10.1016/j.autcon.2025.106141) and [IEEE TITS (2024)](https://doi.org/10.1109/TITS.2024.3424525). Download instructions and submission evaluation are available from the [dataset repository](https://github.com/SHAN-JH/UAV-CrackX-Datasets) and [official benchmark](http://vlp.chd.edu.cn/tasks/4).
 
-## Prediction examples
+## 🖼️ Prediction examples
 
-![UAV-CrackX examples showing the input image, predicted binary crack mask and red prediction overlay](assets/prediction_examples.png)
+<p align="center">
+  <img src="assets/prediction_examples.png" alt="UAV-CrackX input images, predicted binary crack masks, and red prediction overlays" width="950">
+</p>
 
 *Three submission-set examples spanning 4x, 8x and 16x magnification. Left: input RGB. Middle: predicted crack pixels in white. Right: the same prediction overlaid in red. These masks come from the exact **82.83% seven-model submission**, not from a single released model. No test ground truth is displayed or available locally; this figure illustrates predictions rather than per-image accuracy. Mask geometry is unchanged, with no dilation or smoothing.*
 
-## Results and release scope
+## 📊 Results and release scope
 
 | System | Official mIoU (%) | What this repository provides |
 |---|---:|---|
@@ -39,9 +77,9 @@ The source dataset and its acquisition procedure are described in [Automation in
 | Refined MiT-B0 member of our best ensemble | Not submitted individually | Full weights and verified component inference |
 | Full seven-model submission | **82.83** | Method description and configuration summary; not the entire historical ensemble training pipeline |
 
-**82.83 is the ensemble score, not a single-model result.** The compact trainer is a supervised reference implementation. It does not reconstruct all historical co-training, checkpoint selection and ensemble experiments. Training this example from initialization is not a claim of matching the official scores. See [MODEL_CARD.md](MODEL_CARD.md) for provenance and protocol details.
+> **Important:** **82.83% is the ensemble score, not a single-model result.** The compact trainer is a supervised reference implementation. It does not reconstruct all historical co-training, checkpoint selection and ensemble experiments. Training this example from initialization is not a claim of matching the official scores. See [MODEL_CARD.md](MODEL_CARD.md) for provenance and protocol details.
 
-## Install
+## ⚙️ Install
 
 Python 3.10+; Python 3.11, PyTorch 2.1.0/cu118 and an RTX 4090 were used for release verification. Install PyTorch for your CUDA version, then:
 
@@ -52,7 +90,7 @@ python -m pytest tests -q
 
 No MMDetection, MMSegmentation, timm, ProMSC checkout or original research folders are needed. The two `.pt` files are included under `checkpoints/`; no additional model download is required for inference. `requirements.txt` gives compatible ranges, not a fully locked environment.
 
-## Reproduce a released model
+## 🚀 Reproduce a released model
 
 Run from this repository's root. Replace `YOUR_TEST_IMAGES` with a folder of RGB images:
 
@@ -74,7 +112,7 @@ For mixed image dimensions, add `--batch-size 1`. Use `--threshold` to override 
 
 Outputs are native-size grayscale PNGs with values **0/1**. A prediction report records settings and optional metrics. Original submission basenames are retained: for `foo.JPG_2_z.png`, the output is `foo.JPG_2_z.png`. Duplicate stems require explicit `output_name` fields in a manifest. Prediction reports are not submission masks; zip only PNGs under a `result/` directory if required by the benchmark.
 
-## Data paths: the only required placeholders
+## 🗂️ Data paths: the only required placeholders
 
 Download data separately from the [official task page](http://vlp.chd.edu.cn/tasks/4), subject to its access terms. The README includes only a small qualitative preview; dataset archives, annotations and the full submission predictions are not bundled.
 
@@ -100,7 +138,7 @@ python predict.py --checkpoint checkpoints/mit_b0_native_refined.pt --manifest Y
 
 Metrics pool pixel confusion counts over the split. `mIoU = (IoU_crack + IoU_background)/2`. F1, precision, recall and accuracy are included. Reports use fractions; multiply by 100 for percentage scores. Evaluate a checkpoint only on labels excluded from its training: the released refined checkpoint was refit on all 1200 labels, so those images cannot give an independent validation score.
 
-## Train
+## 🧠 Train
 
 For a fresh supervised experiment, optionally supply the official ImageNet MiT-B0 encoder weights:
 
@@ -136,7 +174,7 @@ python train.py --config configs/refit.json --init runs/refined/best.pt --full -
 
 `--full` writes `final.pt`, uses all labeled records and computes no held-out validation score. The test split is never consumed by this supervised reference trainer. Historical ensemble members included transductive co-training using unlabeled submission images; see the model card.
 
-## Files and attribution
+## 📜 Files and attribution
 
 `model.py`, `losses.py`, `dataset.py`, `train.py`, `predict.py` and `utils.py` contain the complete compact implementation.  
 
