@@ -11,7 +11,7 @@ The official result from leaderboard was: mIoU 81.73, crack F1 79.48, crack IoU 
 
 ## Full submission context
 
-The [djene-XDU-V2 entry](http://vlp.chd.edu.cn/tasks/method/327) was recorded at 82.83% mIoU, 80.96 F1, 68.00 crack IoU, 80.85 precision, 81.06 recall and 97.76 accuracy. A public leaderboard check on 2026-11-11 at 04:01 UTC recorded the highest displayed mIoU at that time; rankings can change.
+The [djene-XDU entry](http://vlp.chd.edu.cn/tasks/method/327) was recorded at 82.83% mIoU, 80.96 F1, 68.00 crack IoU, 80.85 precision, 81.06 recall and 97.76 accuracy. A public leaderboard check on 2026-11-11 at 04:01 UTC recorded the highest displayed mIoU at that time; rankings can change.
 
 | Full ensemble member | Probability weight |
 |---|---:|
