@@ -43,7 +43,7 @@ This compact release provides **MiT-B0 + UPer**, an optional native-resolution R
 
 ### 🧭 Navigate
 
-[📂 Dataset](#-dataset-uav-crackx) · [🖼️ Predictions](#-prediction-examples) · [📊 Results](#-results-and-release-scope) · [⚙️ Install](#-install) · [🚀 Inference](#-reproduce-a-released-model) · [🗂️ Data](#-data-paths-the-only-required-placeholders) · [🧠 Training](#-train) · [📜 Attribution](#-files-and-attribution)
+[📂 Dataset](#-dataset-uav-crackx) · [🖼️ Predictions](#-prediction-examples) · [📊 Results](#-results-and-release-scope) · [⚙️ Install](#-install) · [🚀 Inference](#-reproduce-a-released-model) · [🗂️ Data](#-data-paths-the-only-required-placeholders) · [🧠 Training](#-train) ·
 
 
 ## 📂 Dataset: UAV-CrackX
@@ -120,7 +120,7 @@ Copy `data/manifest.example.json` to your own manifest and replace every example
 }
 ```
 
-Evaluate using real labeled masks:
+📜 Evaluate using real labeled masks:
 
 ```bash
 python predict.py --checkpoint checkpoints/mit_b0_native_refined.pt --manifest YOUR_MANIFEST.json --split val --data-root YOUR_DATA_ROOT --output predictions/validation
@@ -136,8 +136,6 @@ For a fresh supervised experiment, optionally supply the official ImageNet MiT-B
 python train.py --config configs/baseline.json --data-root YOUR_DATA_ROOT --manifest YOUR_MANIFEST.json --output runs/baseline --encoder-weights YOUR_MIT_B0.pth
 ```
 
-Omitting `--encoder-weights` uses random initialization. Architecture: encoder channels 32/64/160/256, two blocks per stage, first patch stride 2 and a 128-channel UPer decoder. AdamW uses separate encoder/head learning rates, cosine decay with warm-up, gradient accumulation/clipping, EMA and training-only BatchNorm refresh. `history.json` records loss components, images seen, epoch time and validation metrics; `best.pt` selects the best validation mIoU of live/EMA weights. `last.pt` is an inference snapshot, not an optimizer-resume checkpoint.
-
 To add the zero-initialized refinement head to a supervised baseline you trained **on your training split**:
 
 ```bash
@@ -150,16 +148,14 @@ The supervised loss is:
 L = BCE_with_logits + soft_Dice_loss + 0.1 * soft_clDice_loss
 ```
 
-BCE and Dice are averaged per image over valid pixels. Dice uses additive smoothing 1. Soft skeletonization uses five iterations and bounded [0,1] probabilities; binary ground-truth skeletons supervise centerline coverage. Morphology runs on the unpadded valid rectangle. Partial/nonrectangular annotations are explicitly unsupported for the topology term.
+📜 BCE and Dice are averaged per image over valid pixels. Dice uses additive smoothing 1. Soft skeletonization uses five iterations and bounded [0,1] probabilities; binary ground-truth skeletons supervise centerline coverage. Morphology runs on the unpadded valid rectangle. Partial/nonrectangular annotations are explicitly unsupported for the topology term.
 
 ```bash
 python train.py --config configs/refit.json --init runs/refined/best.pt --full --data-root YOUR_DATA_ROOT --manifest YOUR_MANIFEST.json --output runs/refit
 ```
 
-`--full` writes `final.pt`, uses all labeled records and computes no held-out validation score. The test split is never consumed by this supervised reference trainer. Historical ensemble members included transductive co-training using unlabeled submission images; see the model card.
-
 ## 📜 Files and attribution
 
 `model.py`, `losses.py`, `dataset.py`, `train.py`, `predict.py` and `utils.py` contain the complete compact implementation.  
 
-Original code is MIT-licensed. **Pretrained-derived checkpoint use is subject to the upstream research/evaluation limitation**; see [WEIGHTS_LICENSE.md](WEIGHTS_LICENSE.md). Architectural and loss references are credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). No claim is made that MiT, UPerNet, clDice or ProMSC are new contributions of this submission.
+📜 Original code is MIT-licensed. **Pretrained-derived checkpoint use is subject to the upstream research/evaluation limitation**; see [WEIGHTS_LICENSE.md](WEIGHTS_LICENSE.md). Architectural and loss references are credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). No claim is made that MiT, UPerNet, clDice or ProMSC are new contributions of this submission.
