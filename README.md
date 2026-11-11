@@ -1,6 +1,35 @@
 # UAV Crack Segmentation
 
-Compact PyTorch code for UAV-CrackX binary crack segmentation: **MiT-B0 + UPer decoder**, with an optional native-resolution RGB/logit refinement head. Includes two trained checkpoints, real image/mask loading, training, losses, evaluation and flip-TTA inference. Replace only dataset paths and split records to use your data.
+**Pixel-level pavement crack segmentation from UAV imagery.** This project turns aerial road images into binary crack maps, with an emphasis on thin structures, connectivity and reliable native-resolution prediction. The full submission achieved **82.83% mIoU** on the UAV-CrackX benchmark.
+
+<p align="center">
+  <img src="assets/uav_inspection.jpg" alt="Illustrative UAV inspection of civil infrastructure" width="700">
+</p>
+
+*UAV inspection illustration supplied by the author. This is a conceptual illustration, not a model output; this project's benchmark task is pavement crack segmentation.*
+
+This compact release provides **MiT-B0 + UPer**, an optional native-resolution RGB/logit refinement head, two trained checkpoints, and complete loading, loss, training, evaluation and flip-TTA code. Replace the example dataset paths to run your own experiments.
+
+## Dataset: UAV-CrackX
+
+[UAV-CrackX](https://github.com/SHAN-JH/UAV-CrackX-Datasets) contains UAV pavement imagery acquired at a 50 m flying altitude with **4x, 8x and 16x magnification**. Thin cracks, textured pavement, shadows and changes in apparent crack width make it a useful benchmark for aerial infrastructure inspection.
+
+| Item | Dataset used in this project |
+|---|---|
+| Task | Binary semantic segmentation: background/pavement `0`, crack `1` |
+| Public labeled data | 1,200 image/mask pairs; 400 per magnification |
+| Submission set | 300 images; labels are not public |
+| Native image size | 672 x 378 pixels (width x height) |
+| Our development split | 1,000 training + 200 capture-group-disjoint validation images |
+| Final refit | All 1,200 labeled images, after model selection |
+
+The source dataset and its acquisition procedure are described in [Automation in Construction (2025)](https://doi.org/10.1016/j.autcon.2025.106141) and [IEEE TITS (2024)](https://doi.org/10.1109/TITS.2024.3424525). Download instructions and submission evaluation are available from the [dataset repository](https://github.com/SHAN-JH/UAV-CrackX-Datasets) and [official benchmark](http://vlp.chd.edu.cn/tasks/4).
+
+## Prediction examples
+
+![UAV-CrackX examples showing the input image, predicted binary crack mask and red prediction overlay](assets/prediction_examples.png)
+
+*Three submission-set examples spanning 4x, 8x and 16x magnification. Left: input RGB. Middle: predicted crack pixels in white. Right: the same prediction overlaid in red. These masks come from the exact **82.83% seven-model submission**, not from a single released model. No test ground truth is displayed or available locally; this figure illustrates predictions rather than per-image accuracy. Mask geometry is unchanged, with no dilation or smoothing.*
 
 ## Results and release scope
 
@@ -47,7 +76,7 @@ Outputs are native-size grayscale PNGs with values **0/1**. A prediction report 
 
 ## Data paths: the only required placeholders
 
-Download data separately from the [official task page](http://vlp.chd.edu.cn/tasks/4), subject to its access terms. Images, annotations and test predictions are not redistributed here.
+Download data separately from the [official task page](http://vlp.chd.edu.cn/tasks/4), subject to its access terms. The README includes only a small qualitative preview; dataset archives, annotations and the full submission predictions are not bundled.
 
 Copy `data/manifest.example.json` to your own manifest and replace every example path. Paths are relative to `--data-root`. Each labeled record has `image`, `mask` and preferably a capture/source `group`; test records need only `image`. An optional `output_name` overrides the PNG basename.
 
