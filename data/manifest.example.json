@@ -1,0 +1,13 @@
+{
+  "train": [
+    {"image": "images/train_001.jpg", "mask": "masks/train_001.png", "group": "training_capture_A"},
+    {"image": "images/train_002.jpg", "mask": "masks/train_002.png", "group": "training_capture_A"}
+  ],
+  "val": [
+    {"image": "images/val_001.jpg", "mask": "masks/val_001.png", "group": "validation_capture_B"},
+    {"image": "images/val_002.jpg", "mask": "masks/val_002.png", "group": "validation_capture_B"}
+  ],
+  "test": [
+    {"image": "images/test_001.jpg", "output_name": "test_001.png"}
+  ]
+}

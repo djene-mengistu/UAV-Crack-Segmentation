@@ -1,0 +1,20 @@
+{
+  "model": {"refinement": false, "decoder_width": 128, "first_stride": 2},
+  "seed": 2026,
+  "epochs": 120,
+  "batch_size": 4,
+  "accumulation": 2,
+  "workers": 2,
+  "lr": 0.0003,
+  "encoder_lr": 0.00006,
+  "weight_decay": 0.01,
+  "warmup_epochs": 3,
+  "lr_floor": 0.05,
+  "ema_decay": 0.99,
+  "bn_refresh_batches": 120,
+  "centerline_weight": 0.1,
+  "ensemble_weight": 0.0,
+  "student_weight": 0.14,
+  "threshold": 0.51,
+  "early_stopping_patience": 0
+}
