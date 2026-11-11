@@ -3,10 +3,10 @@
 **Pixel-level pavement crack segmentation from UAV imagery.** This project turns aerial road images into binary crack maps, with an emphasis on thin structures, connectivity and reliable native-resolution prediction. The full submission achieved **82.83% mIoU** on the UAV-CrackX benchmark.
 
 <p align="center">
-  <img src="assets/uav_inspection.jpg" alt="Illustrative UAV inspection of civil infrastructure" width="700">
+  <img src="assets/road_crack.png" alt="Conceptual UAV pavement inspection and road crack segmentation workflow" width="900">
 </p>
 
-*UAV inspection illustration supplied by the author. This is a conceptual illustration, not a model output; this project's benchmark task is pavement crack segmentation.*
+*Conceptual UAV pavement inspection illustration supplied by the author, not a model output. This project focuses on binary crack segmentation; the other damage classes and 3D analysis shown are illustrative.*
 
 This compact release provides **MiT-B0 + UPer**, an optional native-resolution RGB/logit refinement head, two trained checkpoints, and complete loading, loss, training, evaluation and flip-TTA code. Replace the example dataset paths to run your own experiments.
 
