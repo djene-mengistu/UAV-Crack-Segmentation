@@ -88,8 +88,6 @@ python -m pip install -r requirements.txt
 python -m pytest tests -q
 ```
 
-No MMDetection, MMSegmentation, timm, ProMSC checkout or original research folders are needed. The two `.pt` files are included under `checkpoints/`; no additional model download is required for inference. `requirements.txt` gives compatible ranges, not a fully locked environment.
-
 ## 🚀 Reproduce a released model
 
 Run from this repository's root. Replace `YOUR_TEST_IMAGES` with a folder of RGB images:
@@ -98,8 +96,6 @@ Run from this repository's root. Replace `YOUR_TEST_IMAGES` with a folder of RGB
 python predict.py --checkpoint checkpoints/mit_b0_standalone.pt --images YOUR_TEST_IMAGES --output predictions/standalone
 python predict.py --checkpoint checkpoints/mit_b0_native_refined.pt --images YOUR_TEST_IMAGES --output predictions/refined
 ```
-
-The default device is CUDA; add `--device cpu` if needed. CUDA BF16 is used when supported. CPU/other precision, hardware, PyTorch versions and batch sizes can change predictions near the decision threshold. The recorded mask verification applies to the tested environment.
 
 Checkpoint profiles select four-flip TTA, the correct geometry and inference batch size:
 
@@ -110,11 +106,9 @@ Checkpoint profiles select four-flip TTA, the correct geometry and inference bat
 
 For mixed image dimensions, add `--batch-size 1`. Use `--threshold` to override the profile and `--no-tta` for a quick experiment. The ensemble's 0.44 threshold is **not** a measured optimum for the refined single model.
 
-Outputs are native-size grayscale PNGs with values **0/1**. A prediction report records settings and optional metrics. Original submission basenames are retained: for `foo.JPG_2_z.png`, the output is `foo.JPG_2_z.png`. Duplicate stems require explicit `output_name` fields in a manifest. Prediction reports are not submission masks; zip only PNGs under a `result/` directory if required by the benchmark.
-
 ## 🗂️ Data paths: the only required placeholders
 
-Download data separately from the [official task page](http://vlp.chd.edu.cn/tasks/4), subject to its access terms. The README includes only a small qualitative preview; dataset archives, annotations and the full submission predictions are not bundled.
+Download data separately from the [official task page](http://vlp.chd.edu.cn/tasks/4), subject to its access terms.  
 
 Copy `data/manifest.example.json` to your own manifest and replace every example path. Paths are relative to `--data-root`. Each labeled record has `image`, `mask` and preferably a capture/source `group`; test records need only `image`. An optional `output_name` overrides the PNG basename.
 
@@ -125,10 +119,6 @@ Copy `data/manifest.example.json` to your own manifest and replace every example
   "test": [{"image": "images/test_c.png", "output_name": "test_c.png"}]
 }
 ```
-
-This short JSON shows the schema; actual training needs batches of at least two. Keep every capture group in one split and provide `group` for all labeled records. The loader rejects overlapping group IDs or identical train/val paths; it cannot infer capture identity or duplicate content for you. The original development setup used 1000 training and 200 source-group-disjoint validation samples. Exact historical split lists are not included in this compact release.
-
-Binary masks must use 0/1 or 0/255. RGB and mask dimensions must match. The loader preserves native resolution (672×378 for this task), jointly flips image/mask/skeleton, applies mild RGB brightness/contrast changes, normalizes with ImageNet RGB statistics and replicate-pads bottom/right to a multiple of 32. Labels and validity maps are zero-padded; padded pixels are excluded from losses and metrics. Skeletons are computed from the original binary mask, before flipping. There is no implicit resizing, feature dropout or strong geometric perturbation.
 
 Evaluate using real labeled masks:
 
@@ -154,8 +144,6 @@ To add the zero-initialized refinement head to a supervised baseline you trained
 python train.py --config configs/refined.json --init runs/baseline/best.pt --data-root YOUR_DATA_ROOT --manifest YOUR_MANIFEST.json --output runs/refined
 ```
 
-The two 24-channel 3×3 convolutions use GELU; GroupNorm follows the first convolution only. A final zero-initialized 1×1 convolution predicts a residual added to the base logits. Encoder, decoder and refiner all remain trainable. `--init` is a warm start, not an exact training resume. Do not initialize an experiment from weights already trained on your validation labels and then claim independent validation.
-
 The supervised loss is:
 
 ```text
@@ -163,10 +151,6 @@ L = BCE_with_logits + soft_Dice_loss + 0.1 * soft_clDice_loss
 ```
 
 BCE and Dice are averaged per image over valid pixels. Dice uses additive smoothing 1. Soft skeletonization uses five iterations and bounded [0,1] probabilities; binary ground-truth skeletons supervise centerline coverage. Morphology runs on the unpadded valid rectangle. Partial/nonrectangular annotations are explicitly unsupported for the topology term.
-
-An optional `ensemble_loss` hook implements the final refinement idea: `q = fixed_context + 0.14*sigmoid(student_logits)`, supervised by **real binary labels** using BCE+Dice. Set `ensemble_weight` to 0.5 and provide a native-size `.npy` `fixed_context` for every training record. Each map must be `sum(w_i*p_i)` for the other frozen models, with total weight 0.86. The loader applies the same spatial flips to maps, RGB and masks. Other model outputs are detached. Validation must use teachers that excluded validation labels. Default configs set this term to zero, so ordinary training needs no cached teacher predictions. The minimal trainer selects by single-model validation mIoU; the historical refinement experiment selected by the actual full-ensemble validation mIoU.
-
-After selection, optionally train a fixed short budget on train+val. `configs/refit.json` uses two epochs, encoder/decoder/refinement learning rates 6e-7/3e-6/3e-5, and no ensemble term:
 
 ```bash
 python train.py --config configs/refit.json --init runs/refined/best.pt --full --data-root YOUR_DATA_ROOT --manifest YOUR_MANIFEST.json --output runs/refit
