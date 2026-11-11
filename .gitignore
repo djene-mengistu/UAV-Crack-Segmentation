@@ -1,9 +1,69 @@
+
+# ==========================================
+# UAV-Crack-Segmentation
+# Git Ignore Configuration
+# ==========================================
+
+# Python cache
 __pycache__/
+*.py[cod]
 .pytest_cache/
-*.pyc
+.mypy_cache/
+
+# Virtual environments
 .venv/
+venv/
+env/
+.env
+.env.*
+
+# Training and inference outputs
 runs/
 predictions/
+outputs/
+logs/
+wandb/
+tensorboard/
+*.log
+
+# Datasets
 data/private/
+data/raw/
+data/downloads/
 *.zip
 *.tar.gz
+*.7z
+
+# Model checkpoints and weights
+checkpoints/*.pth
+checkpoints/*.pt
+checkpoints/*.ckpt
+checkpoints/*.onnx
+checkpoints/**/*.pth
+checkpoints/**/*.pt
+checkpoints/**/*.ckpt
+checkpoints/**/*.onnx
+
+# Large model files anywhere
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.safetensors
+
+# Keep documentation and configuration
+!README.md
+!MODEL_CARD.md
+
+# IDE settings
+.vscode/
+.idea/
+
+# Windows / macOS files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak
+*.swp

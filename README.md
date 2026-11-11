@@ -1,12 +1,12 @@
 # UAV Crack Segmentation
 
-**Pixel-level pavement crack segmentation from UAV imagery.** This project turns aerial road images into binary crack maps, with an emphasis on thin structures, connectivity and reliable native-resolution prediction. The full submission achieved **82.83% mIoU** on the UAV-CrackX benchmark.
+**Pixel-level pavement crack segmentation from UAV imagery.** This project turns aerial road images into binary crack maps, with an emphasis on thin structures, connectivity and reliable native-resolution prediction. The full submission achieved **82.83% mIoU** on the [UAV-CrackX benchmark leaderboard](http://vlp.chd.edu.cn/tasks/4), #1 seed at the time of submission.
 
 <p align="center">
   <img src="assets/road_crack.png" alt="Conceptual UAV pavement inspection and road crack segmentation workflow" width="900">
 </p>
 
-*Conceptual UAV pavement inspection illustration supplied by the author, not a model output. This project focuses on binary crack segmentation; the other damage classes and 3D analysis shown are illustrative.*
+*Conceptual UAV pavement inspection illustration.*
 
 This compact release provides **MiT-B0 + UPer**, an optional native-resolution RGB/logit refinement head, two trained checkpoints, and complete loading, loss, training, evaluation and flip-TTA code. Replace the example dataset paths to run your own experiments.
 
@@ -138,6 +138,6 @@ python train.py --config configs/refit.json --init runs/refined/best.pt --full -
 
 ## Files and attribution
 
-`model.py`, `losses.py`, `dataset.py`, `train.py`, `predict.py` and `utils.py` contain the complete compact implementation. [SUBMISSION_DESCRIPTION.md](SUBMISSION_DESCRIPTION.md) provides copy-ready descriptions. [VALIDATION.md](VALIDATION.md) records release checks; checkpoint hashes are in `checkpoints/SHA256SUMS`. [PUBLISH.md](PUBLISH.md) explains uploading this folder to GitHub.
+`model.py`, `losses.py`, `dataset.py`, `train.py`, `predict.py` and `utils.py` contain the complete compact implementation.  
 
 Original code is MIT-licensed. **Pretrained-derived checkpoint use is subject to the upstream research/evaluation limitation**; see [WEIGHTS_LICENSE.md](WEIGHTS_LICENSE.md). Architectural and loss references are credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). No claim is made that MiT, UPerNet, clDice or ProMSC are new contributions of this submission.

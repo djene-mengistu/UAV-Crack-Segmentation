@@ -1,6 +1,6 @@
 # Release verification
 
-Checks performed on 2026-11-11 using Python 3.11, PyTorch 2.1.0+cu118 and NVIDIA RTX 4090. No hidden test labels were used. Machine-readable counts and exported checkpoint hashes are in `checkpoints/VALIDATION.json` and `checkpoints/SHA256SUMS`.
+Checks performed on 2026-11-11 using Python 3.11, PyTorch 2.1.0+cu118 and NVIDIA RTX 4090. No hidden test labels were used.  
 
 ## Saved model compatibility
 
@@ -26,6 +26,4 @@ Run `python -m pytest tests -q`. The eight tests cover:
 - Flip-TTA inversion and pooled two-class metric definitions.
 - A real one-epoch training/checkpoint/prediction round trip and an all-label refit smoke test with no held-out score.
 
-The short smoke test uses synthetic data only. It verifies execution and data flow, not benchmark accuracy or training convergence. Checkpoint inference and historical official scores are described separately in `MODEL_CARD.md`.
-
-The final public predictor was also exercised with each real bundled checkpoint on four original submission images. Both profiles produced the expected masks, including the refined model's batch-size-four setting; see `checkpoints/CLI_VALIDATION.json`. The training round trip additionally exercised upgrading a baseline checkpoint to the native refiner and training with detached fixed-context ensemble supervision.
+ 

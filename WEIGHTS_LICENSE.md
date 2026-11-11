@@ -4,8 +4,3 @@ The two checkpoints in `checkpoints/` descend from MiT-B0 ImageNet pretrained we
 
 The source license's use limitation and redistribution requirements continue to apply to pretrained-derived weights. The repository's MIT license for original code does not grant broader rights to these checkpoints. NVIDIA retains its upstream rights. The new decoder/refinement training does not remove the upstream limitation.
 
-Upstream source: https://github.com/NVlabs/SegFormer
-
-License source: https://github.com/NVlabs/SegFormer/blob/master/LICENSE
-
-No dataset images, annotations or third-party pretrained download archives are bundled. Obtain those separately under their provider's terms.
